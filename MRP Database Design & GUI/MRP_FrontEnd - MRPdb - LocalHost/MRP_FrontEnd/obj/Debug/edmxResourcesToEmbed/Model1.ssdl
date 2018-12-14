@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="manufacturerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="BoM">
+    <Key>
+      <PropertyRef Name="BillOfMaterialID" />
+    </Key>
+    <Property Name="BillOfMaterialID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProductAssemblyID" Type="int" />
+    <Property Name="ComponentID" Type="int" />
+    <Property Name="UnitMeasureCode" Type="int" />
+    <Property Name="BoMLevel" Type="int" />
+    <Property Name="PerAssemblyQuantity" Type="int" />
+  </EntityType>
+  <EntityType Name="CreditReference">
+    <Key>
+      <PropertyRef Name="CreditReferenceID" />
+    </Key>
+    <Property Name="CreditReferenceID" Type="int" Nullable="false" />
+    <Property Name="CustomerID" Type="int" />
+    <Property Name="AccountNumber" Type="int" />
+    <Property Name="CurrentBalance" Type="money" />
+    <Property Name="CreditLimit" Type="money" />
+  </EntityType>
+  <EntityType Name="customer">
+    <Key>
+      <PropertyRef Name="customerID" />
+    </Key>
+    <Property Name="customerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="customerName" Type="varchar" MaxLength="30" />
+    <Property Name="addressBilling" Type="varchar" MaxLength="30" />
+    <Property Name="shippingStreet" Type="varchar" MaxLength="30" />
+    <Property Name="shippingCity" Type="varchar" MaxLength="30" />
+    <Property Name="shippingState" Type="varchar" MaxLength="30" />
+    <Property Name="creditCard" Type="varchar" MaxLength="16" />
+    <Property Name="creditRefID" Type="varchar" MaxLength="30" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'manufacturer.mrp.HILODriver' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="HILODriver">
+    <Key>
+      <PropertyRef Name="DriverName" />
+    </Key>
+    <Property Name="DriverID" Type="int" />
+    <Property Name="DriverName" Type="char" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="inventory">
+    <Key>
+      <PropertyRef Name="inventoryID" />
+    </Key>
+    <Property Name="inventoryID" Type="int" Nullable="false" />
+    <Property Name="vendorID" Type="int" />
+    <Property Name="itemName" Type="varchar" MaxLength="30" />
+    <Property Name="itemDesc" Type="varchar" MaxLength="200" />
+    <Property Name="itemUnit" Type="varchar" MaxLength="20" />
+    <Property Name="itemType" Type="varchar" MaxLength="2" />
+    <Property Name="itemFCost" Type="varchar" MaxLength="20" />
+    <Property Name="itemVCost" Type="varchar" MaxLength="20" />
+    <Property Name="bestPrice" Type="varchar" MaxLength="20" />
+    <Property Name="manufacturer" Type="varchar" MaxLength="30" />
+    <Property Name="imageFile" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="invoice">
+    <Key>
+      <PropertyRef Name="invoiceID" />
+    </Key>
+    <Property Name="invoiceID" Type="int" Nullable="false" />
+    <Property Name="customerID" Type="int" />
+    <Property Name="shipmentType" Type="int" />
+    <Property Name="orderTotalPrice" Type="money" />
+    <Property Name="estimatedShippingDate" Type="date" />
+    <Property Name="invoiceDateTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="invoiceLineItems">
+    <Key>
+      <PropertyRef Name="invoiceID" />
+      <PropertyRef Name="invoiceSequence" />
+    </Key>
+    <Property Name="invoiceID" Type="int" Nullable="false" />
+    <Property Name="invoiceSequence" Type="int" Nullable="false" />
+    <Property Name="invoiceLineItemPrice" Type="money" />
+    <Property Name="inventoryID" Type="int" />
+    <Property Name="quantityOfItem" Type="int" />
+    <Property Name="orderStatus" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'manufacturer.mrp.JobOrder' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="JobOrder">
+          <Property Name="JobOrderID" Type="int" />
+          <Property Name="inventoryID" Type="int" />
+        </EntityType>-->
+  <EntityType Name="PurchaseOrder">
+    <Key>
+      <PropertyRef Name="POid" />
+    </Key>
+    <Property Name="POid" Type="int" Nullable="false" />
+    <Property Name="VendorID" Type="int" />
+    <Property Name="Quantiy" Type="int" />
+    <Property Name="Unit" Type="char" MaxLength="15" />
+    <Property Name="CostPerUnit" Type="money" />
+    <Property Name="FulfilledDate" Type="date" />
+    <Property Name="BilltoAddress" Type="char" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="PurchaseOrderLine">
+    <Key>
+      <PropertyRef Name="POid" />
+      <PropertyRef Name="PurchaseOrderLineID" />
+    </Key>
+    <Property Name="POid" Type="int" Nullable="false" />
+    <Property Name="PurchaseOrderLineID" Type="int" Nullable="false" />
+    <Property Name="PurchaseOrderLineItemPrice" Type="money" />
+  </EntityType>
+  <EntityType Name="quantityStatus">
+    <Key>
+      <PropertyRef Name="statusID" />
+    </Key>
+    <Property Name="statusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="inventoryID" Type="int" />
+    <Property Name="onHand" Type="int" />
+    <Property Name="onOrder" Type="int" />
+    <Property Name="inTransit" Type="int" />
+  </EntityType>
+  <EntityType Name="Resources">
+    <Key>
+      <PropertyRef Name="ResourceID" />
+    </Key>
+    <Property Name="ResourceID" Type="int" Nullable="false" />
+    <Property Name="ResourceName" Type="char" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="safetyStock">
+    <Key>
+      <PropertyRef Name="safetyStockID" />
+    </Key>
+    <Property Name="safetyStockID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="inventoryID" Type="int" />
+    <Property Name="safetyStock" Type="varchar" MaxLength="20" />
+    <Property Name="maxLevel" Type="int" />
+    <Property Name="orderLeadTime" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'manufacturer.mrp.SalesTax' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="SalesTax">
+          <Property Name="StateCode" Type="varchar" MaxLength="2" />
+          <Property Name="SalesTax" Type="int" />
+        </EntityType>-->
+  <EntityType Name="Vendor">
+    <Key>
+      <PropertyRef Name="vendorID" />
+    </Key>
+    <Property Name="vendorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="vendorName" Type="varchar" MaxLength="40" />
+    <Property Name="contact" Type="varchar" MaxLength="40" />
+    <Property Name="contactNumber" Type="varchar" MaxLength="15" />
+    <Property Name="addressStreet" Type="varchar" MaxLength="40" />
+    <Property Name="addressCity" Type="varchar" MaxLength="40" />
+    <Property Name="addressState" Type="varchar" MaxLength="40" />
+    <Property Name="letterRating" Type="varchar" MaxLength="5" />
+  </EntityType>
+  <EntityType Name="vendorProduct">
+    <Key>
+      <PropertyRef Name="vendorID" />
+      <PropertyRef Name="inventoryID" />
+    </Key>
+    <Property Name="vendorID" Type="int" Nullable="false" />
+    <Property Name="inventoryID" Type="int" Nullable="false" />
+    <Property Name="productName" Type="varchar" MaxLength="30" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'manufacturer.dbo.vInvoiceLineItemsAndInventory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vInvoiceLineItemsAndInventory">
+    <Key>
+      <PropertyRef Name="invoiceID" />
+      <PropertyRef Name="invoiceSequence" />
+    </Key>
+    <Property Name="invoiceID" Type="int" Nullable="false" />
+    <Property Name="invoiceSequence" Type="int" Nullable="false" />
+    <Property Name="inventoryID" Type="int" />
+    <Property Name="itemName" Type="varchar" MaxLength="30" />
+    <Property Name="quantityOfItem" Type="int" />
+    <Property Name="invoiceLineItemPrice" Type="money" />
+    <Property Name="orderStatus" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <Association Name="FK_customerIDCR">
+    <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+    <End Role="CreditReference" Type="Self.CreditReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="CreditReference">
+        <PropertyRef Name="CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_customerIDI">
+    <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+    <End Role="invoice" Type="Self.invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="invoice">
+        <PropertyRef Name="customerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDILI">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+    <End Role="invoiceLineItems" Type="Self.invoiceLineItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="invoiceLineItems">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <!--Errors Found During Generation:
+error 6004: The table 'manufacturer.mrp.JobOrder' is referenced by a relationship, but cannot be found.
+        <Association Name="FK_inventoryIDJO" />-->
+  <Association Name="FK_inventoryIDQS">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+    <End Role="quantityStatus" Type="Self.quantityStatus" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="quantityStatus">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDSS">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+    <End Role="safetyStock" Type="Self.safetyStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="safetyStock">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDVID">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+    <End Role="inventory" Type="Self.inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="vendorID" />
+      </Principal>
+      <Dependent Role="inventory">
+        <PropertyRef Name="vendorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDVS">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="1" />
+    <End Role="vendorProduct" Type="Self.vendorProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="vendorProduct">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_invoiceID">
+    <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
+    <End Role="invoiceLineItems" Type="Self.invoiceLineItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="invoice">
+        <PropertyRef Name="invoiceID" />
+      </Principal>
+      <Dependent Role="invoiceLineItems">
+        <PropertyRef Name="invoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_POid">
+    <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="1" />
+    <End Role="PurchaseOrderLine" Type="Self.PurchaseOrderLine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrder">
+        <PropertyRef Name="POid" />
+      </Principal>
+      <Dependent Role="PurchaseOrderLine">
+        <PropertyRef Name="POid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_vendorID">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+    <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="vendorID" />
+      </Principal>
+      <Dependent Role="PurchaseOrder">
+        <PropertyRef Name="VendorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="updtOrderTotal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="invID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="updtQty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="invID" Type="int" Mode="In" />
+    <Parameter Name="invSeq" Type="int" Mode="In" />
+    <Parameter Name="qty" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="manufacturerModelStoreContainer">
+    <EntitySet Name="BoM" EntityType="Self.BoM" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="CreditReference" EntityType="Self.CreditReference" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="customer" EntityType="Self.customer" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="inventory" EntityType="Self.inventory" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="invoice" EntityType="Self.invoice" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="invoiceLineItems" EntityType="Self.invoiceLineItems" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="PurchaseOrder" EntityType="Self.PurchaseOrder" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="PurchaseOrderLine" EntityType="Self.PurchaseOrderLine" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="quantityStatus" EntityType="Self.quantityStatus" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="Resources" EntityType="Self.Resources" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="safetyStock" EntityType="Self.safetyStock" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="vendorProduct" EntityType="Self.vendorProduct" Schema="mrp" store:Type="Tables" />
+    <EntitySet Name="HILODriver" EntityType="Self.HILODriver" store:Type="Tables" store:Schema="mrp">
+      <DefiningQuery>SELECT 
+    [HILODriver].[DriverID] AS [DriverID], 
+    [HILODriver].[DriverName] AS [DriverName]
+    FROM [mrp].[HILODriver] AS [HILODriver]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vInvoiceLineItemsAndInventory" EntityType="Self.vInvoiceLineItemsAndInventory" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vInvoiceLineItemsAndInventory].[invoiceID] AS [invoiceID], 
+    [vInvoiceLineItemsAndInventory].[invoiceSequence] AS [invoiceSequence], 
+    [vInvoiceLineItemsAndInventory].[inventoryID] AS [inventoryID], 
+    [vInvoiceLineItemsAndInventory].[itemName] AS [itemName], 
+    [vInvoiceLineItemsAndInventory].[quantityOfItem] AS [quantityOfItem], 
+    [vInvoiceLineItemsAndInventory].[invoiceLineItemPrice] AS [invoiceLineItemPrice], 
+    [vInvoiceLineItemsAndInventory].[orderStatus] AS [orderStatus]
+    FROM [dbo].[vInvoiceLineItemsAndInventory] AS [vInvoiceLineItemsAndInventory]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_customerIDCR" Association="Self.FK_customerIDCR">
+      <End Role="customer" EntitySet="customer" />
+      <End Role="CreditReference" EntitySet="CreditReference" />
+    </AssociationSet>
+    <AssociationSet Name="FK_customerIDI" Association="Self.FK_customerIDI">
+      <End Role="customer" EntitySet="customer" />
+      <End Role="invoice" EntitySet="invoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDILI" Association="Self.FK_inventoryIDILI">
+      <End Role="inventory" EntitySet="inventory" />
+      <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDQS" Association="Self.FK_inventoryIDQS">
+      <End Role="inventory" EntitySet="inventory" />
+      <End Role="quantityStatus" EntitySet="quantityStatus" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDSS" Association="Self.FK_inventoryIDSS">
+      <End Role="inventory" EntitySet="inventory" />
+      <End Role="safetyStock" EntitySet="safetyStock" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDVID" Association="Self.FK_inventoryIDVID">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="inventory" EntitySet="inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDVS" Association="Self.FK_inventoryIDVS">
+      <End Role="inventory" EntitySet="inventory" />
+      <End Role="vendorProduct" EntitySet="vendorProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_invoiceID" Association="Self.FK_invoiceID">
+      <End Role="invoice" EntitySet="invoice" />
+      <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_POid" Association="Self.FK_POid">
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+      <End Role="PurchaseOrderLine" EntitySet="PurchaseOrderLine" />
+    </AssociationSet>
+    <AssociationSet Name="FK_vendorID" Association="Self.FK_vendorID">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

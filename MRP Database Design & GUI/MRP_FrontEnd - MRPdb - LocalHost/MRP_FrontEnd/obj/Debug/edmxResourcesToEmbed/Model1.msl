@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="manufacturerModelStoreContainer" CdmEntityContainer="manufacturerEntities1">
+    <EntitySetMapping Name="BoMs">
+      <EntityTypeMapping TypeName="manufacturerModel.BoM">
+        <MappingFragment StoreEntitySet="BoM">
+          <ScalarProperty Name="BillOfMaterialID" ColumnName="BillOfMaterialID" />
+          <ScalarProperty Name="ProductAssemblyID" ColumnName="ProductAssemblyID" />
+          <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
+          <ScalarProperty Name="UnitMeasureCode" ColumnName="UnitMeasureCode" />
+          <ScalarProperty Name="BoMLevel" ColumnName="BoMLevel" />
+          <ScalarProperty Name="PerAssemblyQuantity" ColumnName="PerAssemblyQuantity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CreditReferences">
+      <EntityTypeMapping TypeName="manufacturerModel.CreditReference">
+        <MappingFragment StoreEntitySet="CreditReference">
+          <ScalarProperty Name="CreditReferenceID" ColumnName="CreditReferenceID" />
+          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+          <ScalarProperty Name="CurrentBalance" ColumnName="CurrentBalance" />
+          <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="customers">
+      <EntityTypeMapping TypeName="manufacturerModel.customer">
+        <MappingFragment StoreEntitySet="customer">
+          <ScalarProperty Name="customerID" ColumnName="customerID" />
+          <ScalarProperty Name="customerName" ColumnName="customerName" />
+          <ScalarProperty Name="addressBilling" ColumnName="addressBilling" />
+          <ScalarProperty Name="shippingStreet" ColumnName="shippingStreet" />
+          <ScalarProperty Name="shippingCity" ColumnName="shippingCity" />
+          <ScalarProperty Name="shippingState" ColumnName="shippingState" />
+          <ScalarProperty Name="creditCard" ColumnName="creditCard" />
+          <ScalarProperty Name="creditRefID" ColumnName="creditRefID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="inventories">
+      <EntityTypeMapping TypeName="manufacturerModel.inventory">
+        <MappingFragment StoreEntitySet="inventory">
+          <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+          <ScalarProperty Name="vendorID" ColumnName="vendorID" />
+          <ScalarProperty Name="itemName" ColumnName="itemName" />
+          <ScalarProperty Name="itemDesc" ColumnName="itemDesc" />
+          <ScalarProperty Name="itemUnit" ColumnName="itemUnit" />
+          <ScalarProperty Name="itemType" ColumnName="itemType" />
+          <ScalarProperty Name="itemFCost" ColumnName="itemFCost" />
+          <ScalarProperty Name="itemVCost" ColumnName="itemVCost" />
+          <ScalarProperty Name="bestPrice" ColumnName="bestPrice" />
+          <ScalarProperty Name="manufacturer" ColumnName="manufacturer" />
+          <ScalarProperty Name="imageFile" ColumnName="imageFile" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="invoices">
+      <EntityTypeMapping TypeName="manufacturerModel.invoice">
+        <MappingFragment StoreEntitySet="invoice">
+          <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+          <ScalarProperty Name="customerID" ColumnName="customerID" />
+          <ScalarProperty Name="shipmentType" ColumnName="shipmentType" />
+          <ScalarProperty Name="orderTotalPrice" ColumnName="orderTotalPrice" />
+          <ScalarProperty Name="estimatedShippingDate" ColumnName="estimatedShippingDate" />
+          <ScalarProperty Name="invoiceDateTime" ColumnName="invoiceDateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="invoiceLineItems">
+      <EntityTypeMapping TypeName="manufacturerModel.invoiceLineItem">
+        <MappingFragment StoreEntitySet="invoiceLineItems">
+          <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+          <ScalarProperty Name="invoiceSequence" ColumnName="invoiceSequence" />
+          <ScalarProperty Name="invoiceLineItemPrice" ColumnName="invoiceLineItemPrice" />
+          <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+          <ScalarProperty Name="quantityOfItem" ColumnName="quantityOfItem" />
+          <ScalarProperty Name="orderStatus" ColumnName="orderStatus" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrders">
+      <EntityTypeMapping TypeName="manufacturerModel.PurchaseOrder">
+        <MappingFragment StoreEntitySet="PurchaseOrder">
+          <ScalarProperty Name="POid" ColumnName="POid" />
+          <ScalarProperty Name="VendorID" ColumnName="VendorID" />
+          <ScalarProperty Name="Quantiy" ColumnName="Quantiy" />
+          <ScalarProperty Name="Unit" ColumnName="Unit" />
+          <ScalarProperty Name="CostPerUnit" ColumnName="CostPerUnit" />
+          <ScalarProperty Name="FulfilledDate" ColumnName="FulfilledDate" />
+          <ScalarProperty Name="BilltoAddress" ColumnName="BilltoAddress" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrderLines">
+      <EntityTypeMapping TypeName="manufacturerModel.PurchaseOrderLine">
+        <MappingFragment StoreEntitySet="PurchaseOrderLine">
+          <ScalarProperty Name="POid" ColumnName="POid" />
+          <ScalarProperty Name="PurchaseOrderLineID" ColumnName="PurchaseOrderLineID" />
+          <ScalarProperty Name="PurchaseOrderLineItemPrice" ColumnName="PurchaseOrderLineItemPrice" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="quantityStatus">
+      <EntityTypeMapping TypeName="manufacturerModel.quantityStatu">
+        <MappingFragment StoreEntitySet="quantityStatus">
+          <ScalarProperty Name="statusID" ColumnName="statusID" />
+          <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+          <ScalarProperty Name="onHand" ColumnName="onHand" />
+          <ScalarProperty Name="onOrder" ColumnName="onOrder" />
+          <ScalarProperty Name="inTransit" ColumnName="inTransit" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Resources">
+      <EntityTypeMapping TypeName="manufacturerModel.Resource">
+        <MappingFragment StoreEntitySet="Resources">
+          <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+          <ScalarProperty Name="ResourceName" ColumnName="ResourceName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="safetyStocks">
+      <EntityTypeMapping TypeName="manufacturerModel.safetyStock">
+        <MappingFragment StoreEntitySet="safetyStock">
+          <ScalarProperty Name="safetyStockID" ColumnName="safetyStockID" />
+          <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+          <ScalarProperty Name="safetyStock1" ColumnName="safetyStock" />
+          <ScalarProperty Name="maxLevel" ColumnName="maxLevel" />
+          <ScalarProperty Name="orderLeadTime" ColumnName="orderLeadTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Vendors">
+      <EntityTypeMapping TypeName="manufacturerModel.Vendor">
+        <MappingFragment StoreEntitySet="Vendor">
+          <ScalarProperty Name="vendorID" ColumnName="vendorID" />
+          <ScalarProperty Name="vendorName" ColumnName="vendorName" />
+          <ScalarProperty Name="contact" ColumnName="contact" />
+          <ScalarProperty Name="contactNumber" ColumnName="contactNumber" />
+          <ScalarProperty Name="addressStreet" ColumnName="addressStreet" />
+          <ScalarProperty Name="addressCity" ColumnName="addressCity" />
+          <ScalarProperty Name="addressState" ColumnName="addressState" />
+          <ScalarProperty Name="letterRating" ColumnName="letterRating" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vendorProducts">
+      <EntityTypeMapping TypeName="manufacturerModel.vendorProduct">
+        <MappingFragment StoreEntitySet="vendorProduct">
+          <ScalarProperty Name="vendorID" ColumnName="vendorID" />
+          <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+          <ScalarProperty Name="productName" ColumnName="productName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="HILODrivers">
+      <EntityTypeMapping TypeName="manufacturerModel.HILODriver">
+        <MappingFragment StoreEntitySet="HILODriver">
+          <ScalarProperty Name="DriverID" ColumnName="DriverID" />
+          <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vInvoiceLineItemsAndInventories">
+      <EntityTypeMapping TypeName="manufacturerModel.vInvoiceLineItemsAndInventory">
+        <MappingFragment StoreEntitySet="vInvoiceLineItemsAndInventory">
+          <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+          <ScalarProperty Name="invoiceSequence" ColumnName="invoiceSequence" />
+          <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+          <ScalarProperty Name="itemName" ColumnName="itemName" />
+          <ScalarProperty Name="quantityOfItem" ColumnName="quantityOfItem" />
+          <ScalarProperty Name="invoiceLineItemPrice" ColumnName="invoiceLineItemPrice" />
+          <ScalarProperty Name="orderStatus" ColumnName="orderStatus" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="updtOrderTotal" FunctionName="manufacturerModel.Store.updtOrderTotal" />
+    <FunctionImportMapping FunctionImportName="updtQty" FunctionName="manufacturerModel.Store.updtQty" />
+  </EntityContainerMapping>
+</Mapping>

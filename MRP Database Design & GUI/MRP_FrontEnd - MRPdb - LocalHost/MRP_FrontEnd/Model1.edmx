@@ -1,0 +1,968 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="manufacturerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BoM">
+          <Key>
+            <PropertyRef Name="BillOfMaterialID" />
+          </Key>
+          <Property Name="BillOfMaterialID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductAssemblyID" Type="int" />
+          <Property Name="ComponentID" Type="int" />
+          <Property Name="UnitMeasureCode" Type="int" />
+          <Property Name="BoMLevel" Type="int" />
+          <Property Name="PerAssemblyQuantity" Type="int" />
+        </EntityType>
+        <EntityType Name="CreditReference">
+          <Key>
+            <PropertyRef Name="CreditReferenceID" />
+          </Key>
+          <Property Name="CreditReferenceID" Type="int" Nullable="false" />
+          <Property Name="CustomerID" Type="int" />
+          <Property Name="AccountNumber" Type="int" />
+          <Property Name="CurrentBalance" Type="money" />
+          <Property Name="CreditLimit" Type="money" />
+        </EntityType>
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="customerID" />
+          </Key>
+          <Property Name="customerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customerName" Type="varchar" MaxLength="30" />
+          <Property Name="addressBilling" Type="varchar" MaxLength="30" />
+          <Property Name="shippingStreet" Type="varchar" MaxLength="30" />
+          <Property Name="shippingCity" Type="varchar" MaxLength="30" />
+          <Property Name="shippingState" Type="varchar" MaxLength="30" />
+          <Property Name="creditCard" Type="varchar" MaxLength="16" />
+          <Property Name="creditRefID" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'manufacturer.mrp.HILODriver' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="HILODriver">
+          <Key>
+            <PropertyRef Name="DriverName" />
+          </Key>
+          <Property Name="DriverID" Type="int" />
+          <Property Name="DriverName" Type="char" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="inventory">
+          <Key>
+            <PropertyRef Name="inventoryID" />
+          </Key>
+          <Property Name="inventoryID" Type="int" Nullable="false" />
+          <Property Name="vendorID" Type="int" />
+          <Property Name="itemName" Type="varchar" MaxLength="30" />
+          <Property Name="itemDesc" Type="varchar" MaxLength="200" />
+          <Property Name="itemUnit" Type="varchar" MaxLength="20" />
+          <Property Name="itemType" Type="varchar" MaxLength="2" />
+          <Property Name="itemFCost" Type="varchar" MaxLength="20" />
+          <Property Name="itemVCost" Type="varchar" MaxLength="20" />
+          <Property Name="bestPrice" Type="varchar" MaxLength="20" />
+          <Property Name="manufacturer" Type="varchar" MaxLength="30" />
+          <Property Name="imageFile" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="invoice">
+          <Key>
+            <PropertyRef Name="invoiceID" />
+          </Key>
+          <Property Name="invoiceID" Type="int" Nullable="false" />
+          <Property Name="customerID" Type="int" />
+          <Property Name="shipmentType" Type="int" />
+          <Property Name="orderTotalPrice" Type="money" />
+          <Property Name="estimatedShippingDate" Type="date" />
+          <Property Name="invoiceDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="invoiceLineItems">
+          <Key>
+            <PropertyRef Name="invoiceID" />
+            <PropertyRef Name="invoiceSequence" />
+          </Key>
+          <Property Name="invoiceID" Type="int" Nullable="false" />
+          <Property Name="invoiceSequence" Type="int" Nullable="false" />
+          <Property Name="invoiceLineItemPrice" Type="money" />
+          <Property Name="inventoryID" Type="int" />
+          <Property Name="quantityOfItem" Type="int" />
+          <Property Name="orderStatus" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'manufacturer.mrp.JobOrder' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="JobOrder">
+          <Property Name="JobOrderID" Type="int" />
+          <Property Name="inventoryID" Type="int" />
+        </EntityType>-->
+        <EntityType Name="PurchaseOrder">
+          <Key>
+            <PropertyRef Name="POid" />
+          </Key>
+          <Property Name="POid" Type="int" Nullable="false" />
+          <Property Name="VendorID" Type="int" />
+          <Property Name="Quantiy" Type="int" />
+          <Property Name="Unit" Type="char" MaxLength="15" />
+          <Property Name="CostPerUnit" Type="money" />
+          <Property Name="FulfilledDate" Type="date" />
+          <Property Name="BilltoAddress" Type="char" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PurchaseOrderLine">
+          <Key>
+            <PropertyRef Name="POid" />
+            <PropertyRef Name="PurchaseOrderLineID" />
+          </Key>
+          <Property Name="POid" Type="int" Nullable="false" />
+          <Property Name="PurchaseOrderLineID" Type="int" Nullable="false" />
+          <Property Name="PurchaseOrderLineItemPrice" Type="money" />
+        </EntityType>
+        <EntityType Name="quantityStatus">
+          <Key>
+            <PropertyRef Name="statusID" />
+          </Key>
+          <Property Name="statusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="inventoryID" Type="int" />
+          <Property Name="onHand" Type="int" />
+          <Property Name="onOrder" Type="int" />
+          <Property Name="inTransit" Type="int" />
+        </EntityType>
+        <EntityType Name="Resources">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="ResourceName" Type="char" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="safetyStock">
+          <Key>
+            <PropertyRef Name="safetyStockID" />
+          </Key>
+          <Property Name="safetyStockID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="inventoryID" Type="int" />
+          <Property Name="safetyStock" Type="varchar" MaxLength="20" />
+          <Property Name="maxLevel" Type="int" />
+          <Property Name="orderLeadTime" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'manufacturer.mrp.SalesTax' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="SalesTax">
+          <Property Name="StateCode" Type="varchar" MaxLength="2" />
+          <Property Name="SalesTax" Type="int" />
+        </EntityType>-->
+        <EntityType Name="Vendor">
+          <Key>
+            <PropertyRef Name="vendorID" />
+          </Key>
+          <Property Name="vendorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vendorName" Type="varchar" MaxLength="40" />
+          <Property Name="contact" Type="varchar" MaxLength="40" />
+          <Property Name="contactNumber" Type="varchar" MaxLength="15" />
+          <Property Name="addressStreet" Type="varchar" MaxLength="40" />
+          <Property Name="addressCity" Type="varchar" MaxLength="40" />
+          <Property Name="addressState" Type="varchar" MaxLength="40" />
+          <Property Name="letterRating" Type="varchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="vendorProduct">
+          <Key>
+            <PropertyRef Name="vendorID" />
+            <PropertyRef Name="inventoryID" />
+          </Key>
+          <Property Name="vendorID" Type="int" Nullable="false" />
+          <Property Name="inventoryID" Type="int" Nullable="false" />
+          <Property Name="productName" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'manufacturer.dbo.vInvoiceLineItemsAndInventory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vInvoiceLineItemsAndInventory">
+          <Key>
+            <PropertyRef Name="invoiceID" />
+            <PropertyRef Name="invoiceSequence" />
+          </Key>
+          <Property Name="invoiceID" Type="int" Nullable="false" />
+          <Property Name="invoiceSequence" Type="int" Nullable="false" />
+          <Property Name="inventoryID" Type="int" />
+          <Property Name="itemName" Type="varchar" MaxLength="30" />
+          <Property Name="quantityOfItem" Type="int" />
+          <Property Name="invoiceLineItemPrice" Type="money" />
+          <Property Name="orderStatus" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK_customerIDCR">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="CreditReference" Type="Self.CreditReference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="customerID" />
+            </Principal>
+            <Dependent Role="CreditReference">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customerIDI">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="invoice" Type="Self.invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="customerID" />
+            </Principal>
+            <Dependent Role="invoice">
+              <PropertyRef Name="customerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDILI">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+          <End Role="invoiceLineItems" Type="Self.invoiceLineItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="invoiceLineItems">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+error 6004: The table 'manufacturer.mrp.JobOrder' is referenced by a relationship, but cannot be found.
+        <Association Name="FK_inventoryIDJO" />-->
+        <Association Name="FK_inventoryIDQS">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+          <End Role="quantityStatus" Type="Self.quantityStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="quantityStatus">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDSS">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+          <End Role="safetyStock" Type="Self.safetyStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="safetyStock">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDVID">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="inventory" Type="Self.inventory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="vendorID" />
+            </Principal>
+            <Dependent Role="inventory">
+              <PropertyRef Name="vendorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDVS">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="1" />
+          <End Role="vendorProduct" Type="Self.vendorProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="vendorProduct">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_invoiceID">
+          <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
+          <End Role="invoiceLineItems" Type="Self.invoiceLineItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="invoice">
+              <PropertyRef Name="invoiceID" />
+            </Principal>
+            <Dependent Role="invoiceLineItems">
+              <PropertyRef Name="invoiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_POid">
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="1" />
+          <End Role="PurchaseOrderLine" Type="Self.PurchaseOrderLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="POid" />
+            </Principal>
+            <Dependent Role="PurchaseOrderLine">
+              <PropertyRef Name="POid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vendorID">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="vendorID" />
+            </Principal>
+            <Dependent Role="PurchaseOrder">
+              <PropertyRef Name="VendorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="updtOrderTotal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="invID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="updtQty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="invID" Type="int" Mode="In" />
+          <Parameter Name="invSeq" Type="int" Mode="In" />
+          <Parameter Name="qty" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="manufacturerModelStoreContainer">
+          <EntitySet Name="BoM" EntityType="Self.BoM" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="CreditReference" EntityType="Self.CreditReference" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="customer" EntityType="Self.customer" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="inventory" EntityType="Self.inventory" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="invoice" EntityType="Self.invoice" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="invoiceLineItems" EntityType="Self.invoiceLineItems" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="PurchaseOrder" EntityType="Self.PurchaseOrder" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="PurchaseOrderLine" EntityType="Self.PurchaseOrderLine" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="quantityStatus" EntityType="Self.quantityStatus" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="Resources" EntityType="Self.Resources" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="safetyStock" EntityType="Self.safetyStock" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="vendorProduct" EntityType="Self.vendorProduct" Schema="mrp" store:Type="Tables" />
+          <EntitySet Name="HILODriver" EntityType="Self.HILODriver" store:Type="Tables" store:Schema="mrp">
+            <DefiningQuery>SELECT 
+    [HILODriver].[DriverID] AS [DriverID], 
+    [HILODriver].[DriverName] AS [DriverName]
+    FROM [mrp].[HILODriver] AS [HILODriver]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vInvoiceLineItemsAndInventory" EntityType="Self.vInvoiceLineItemsAndInventory" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vInvoiceLineItemsAndInventory].[invoiceID] AS [invoiceID], 
+    [vInvoiceLineItemsAndInventory].[invoiceSequence] AS [invoiceSequence], 
+    [vInvoiceLineItemsAndInventory].[inventoryID] AS [inventoryID], 
+    [vInvoiceLineItemsAndInventory].[itemName] AS [itemName], 
+    [vInvoiceLineItemsAndInventory].[quantityOfItem] AS [quantityOfItem], 
+    [vInvoiceLineItemsAndInventory].[invoiceLineItemPrice] AS [invoiceLineItemPrice], 
+    [vInvoiceLineItemsAndInventory].[orderStatus] AS [orderStatus]
+    FROM [dbo].[vInvoiceLineItemsAndInventory] AS [vInvoiceLineItemsAndInventory]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_customerIDCR" Association="Self.FK_customerIDCR">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="CreditReference" EntitySet="CreditReference" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customerIDI" Association="Self.FK_customerIDI">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="invoice" EntitySet="invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDILI" Association="Self.FK_inventoryIDILI">
+            <End Role="inventory" EntitySet="inventory" />
+            <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDQS" Association="Self.FK_inventoryIDQS">
+            <End Role="inventory" EntitySet="inventory" />
+            <End Role="quantityStatus" EntitySet="quantityStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDSS" Association="Self.FK_inventoryIDSS">
+            <End Role="inventory" EntitySet="inventory" />
+            <End Role="safetyStock" EntitySet="safetyStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDVID" Association="Self.FK_inventoryIDVID">
+            <End Role="Vendor" EntitySet="Vendor" />
+            <End Role="inventory" EntitySet="inventory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDVS" Association="Self.FK_inventoryIDVS">
+            <End Role="inventory" EntitySet="inventory" />
+            <End Role="vendorProduct" EntitySet="vendorProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_invoiceID" Association="Self.FK_invoiceID">
+            <End Role="invoice" EntitySet="invoice" />
+            <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_POid" Association="Self.FK_POid">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+            <End Role="PurchaseOrderLine" EntitySet="PurchaseOrderLine" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vendorID" Association="Self.FK_vendorID">
+            <End Role="Vendor" EntitySet="Vendor" />
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="manufacturerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BoM">
+          <Key>
+            <PropertyRef Name="BillOfMaterialID" />
+          </Key>
+          <Property Name="BillOfMaterialID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductAssemblyID" Type="Int32" />
+          <Property Name="ComponentID" Type="Int32" />
+          <Property Name="UnitMeasureCode" Type="Int32" />
+          <Property Name="BoMLevel" Type="Int32" />
+          <Property Name="PerAssemblyQuantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="CreditReference">
+          <Key>
+            <PropertyRef Name="CreditReferenceID" />
+          </Key>
+          <Property Name="CreditReferenceID" Type="Int32" Nullable="false" />
+          <Property Name="CustomerID" Type="Int32" />
+          <Property Name="AccountNumber" Type="Int32" />
+          <Property Name="CurrentBalance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CreditLimit" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="customer" Relationship="Self.FK_customerIDCR" FromRole="CreditReference" ToRole="customer" />
+        </EntityType>
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="customerID" />
+          </Key>
+          <Property Name="customerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customerName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="addressBilling" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="shippingStreet" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="shippingCity" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="shippingState" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="creditCard" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="creditRefID" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CreditReferences" Relationship="Self.FK_customerIDCR" FromRole="customer" ToRole="CreditReference" />
+          <NavigationProperty Name="invoices" Relationship="Self.FK_customerIDI" FromRole="customer" ToRole="invoice" />
+        </EntityType>
+        <EntityType Name="inventory">
+          <Key>
+            <PropertyRef Name="inventoryID" />
+          </Key>
+          <Property Name="inventoryID" Type="Int32" Nullable="false" />
+          <Property Name="vendorID" Type="Int32" />
+          <Property Name="itemName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="itemDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="itemUnit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="itemType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="itemFCost" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="itemVCost" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="bestPrice" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="manufacturer" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="imageFile" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="invoiceLineItems" Relationship="Self.FK_inventoryIDILI" FromRole="inventory" ToRole="invoiceLineItems" />
+          <NavigationProperty Name="quantityStatus" Relationship="Self.FK_inventoryIDQS" FromRole="inventory" ToRole="quantityStatus" />
+          <NavigationProperty Name="safetyStocks" Relationship="Self.FK_inventoryIDSS" FromRole="inventory" ToRole="safetyStock" />
+          <NavigationProperty Name="Vendor" Relationship="Self.FK_inventoryIDVID" FromRole="inventory" ToRole="Vendor" />
+          <NavigationProperty Name="vendorProducts" Relationship="Self.FK_inventoryIDVS" FromRole="inventory" ToRole="vendorProduct" />
+        </EntityType>
+        <EntityType Name="invoice">
+          <Key>
+            <PropertyRef Name="invoiceID" />
+          </Key>
+          <Property Name="invoiceID" Type="Int32" Nullable="false" />
+          <Property Name="customerID" Type="Int32" />
+          <Property Name="shipmentType" Type="Int32" />
+          <Property Name="orderTotalPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="estimatedShippingDate" Type="DateTime" Precision="0" />
+          <Property Name="invoiceDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="customer" Relationship="Self.FK_customerIDI" FromRole="invoice" ToRole="customer" />
+          <NavigationProperty Name="invoiceLineItems" Relationship="Self.FK_invoiceID" FromRole="invoice" ToRole="invoiceLineItems" />
+        </EntityType>
+        <EntityType Name="invoiceLineItem">
+          <Key>
+            <PropertyRef Name="invoiceID" />
+            <PropertyRef Name="invoiceSequence" />
+          </Key>
+          <Property Name="invoiceID" Type="Int32" Nullable="false" />
+          <Property Name="invoiceSequence" Type="Int32" Nullable="false" />
+          <Property Name="invoiceLineItemPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="inventoryID" Type="Int32" />
+          <Property Name="quantityOfItem" Type="Int32" />
+          <Property Name="orderStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDILI" FromRole="invoiceLineItems" ToRole="inventory" />
+          <NavigationProperty Name="invoice" Relationship="Self.FK_invoiceID" FromRole="invoiceLineItems" ToRole="invoice" />
+        </EntityType>
+        <EntityType Name="PurchaseOrder">
+          <Key>
+            <PropertyRef Name="POid" />
+          </Key>
+          <Property Name="POid" Type="Int32" Nullable="false" />
+          <Property Name="VendorID" Type="Int32" />
+          <Property Name="Quantiy" Type="Int32" />
+          <Property Name="Unit" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
+          <Property Name="CostPerUnit" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="FulfilledDate" Type="DateTime" Precision="0" />
+          <Property Name="BilltoAddress" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="PurchaseOrderLines" Relationship="Self.FK_POid" FromRole="PurchaseOrder" ToRole="PurchaseOrderLine" />
+          <NavigationProperty Name="Vendor" Relationship="Self.FK_vendorID" FromRole="PurchaseOrder" ToRole="Vendor" />
+        </EntityType>
+        <EntityType Name="PurchaseOrderLine">
+          <Key>
+            <PropertyRef Name="POid" />
+            <PropertyRef Name="PurchaseOrderLineID" />
+          </Key>
+          <Property Name="POid" Type="Int32" Nullable="false" />
+          <Property Name="PurchaseOrderLineID" Type="Int32" Nullable="false" />
+          <Property Name="PurchaseOrderLineItemPrice" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="Self.FK_POid" FromRole="PurchaseOrderLine" ToRole="PurchaseOrder" />
+        </EntityType>
+        <EntityType Name="quantityStatu">
+          <Key>
+            <PropertyRef Name="statusID" />
+          </Key>
+          <Property Name="statusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="inventoryID" Type="Int32" />
+          <Property Name="onHand" Type="Int32" />
+          <Property Name="onOrder" Type="Int32" />
+          <Property Name="inTransit" Type="Int32" />
+          <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDQS" FromRole="quantityStatus" ToRole="inventory" />
+        </EntityType>
+        <EntityType Name="Resource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="ResourceName" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="safetyStock">
+          <Key>
+            <PropertyRef Name="safetyStockID" />
+          </Key>
+          <Property Name="safetyStockID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="inventoryID" Type="Int32" />
+          <Property Name="safetyStock1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="maxLevel" Type="Int32" />
+          <Property Name="orderLeadTime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDSS" FromRole="safetyStock" ToRole="inventory" />
+        </EntityType>
+        <EntityType Name="Vendor">
+          <Key>
+            <PropertyRef Name="vendorID" />
+          </Key>
+          <Property Name="vendorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vendorName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="contact" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="contactNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="addressStreet" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="addressCity" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="addressState" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="letterRating" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="inventories" Relationship="Self.FK_inventoryIDVID" FromRole="Vendor" ToRole="inventory" />
+          <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK_vendorID" FromRole="Vendor" ToRole="PurchaseOrder" />
+        </EntityType>
+        <EntityType Name="vendorProduct">
+          <Key>
+            <PropertyRef Name="vendorID" />
+            <PropertyRef Name="inventoryID" />
+          </Key>
+          <Property Name="vendorID" Type="Int32" Nullable="false" />
+          <Property Name="inventoryID" Type="Int32" Nullable="false" />
+          <Property Name="productName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDVS" FromRole="vendorProduct" ToRole="inventory" />
+        </EntityType>
+        <EntityType Name="HILODriver">
+          <Key>
+            <PropertyRef Name="DriverName" />
+          </Key>
+          <Property Name="DriverID" Type="Int32" />
+          <Property Name="DriverName" Type="String" MaxLength="30" FixedLength="true" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vInvoiceLineItemsAndInventory">
+          <Key>
+            <PropertyRef Name="invoiceID" />
+            <PropertyRef Name="invoiceSequence" />
+          </Key>
+          <Property Name="invoiceID" Type="Int32" Nullable="false" />
+          <Property Name="invoiceSequence" Type="Int32" Nullable="false" />
+          <Property Name="inventoryID" Type="Int32" />
+          <Property Name="itemName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="quantityOfItem" Type="Int32" />
+          <Property Name="invoiceLineItemPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="orderStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_customerIDCR">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="CreditReference" Type="Self.CreditReference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="customerID" />
+            </Principal>
+            <Dependent Role="CreditReference">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customerIDI">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="invoice" Type="Self.invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="customerID" />
+            </Principal>
+            <Dependent Role="invoice">
+              <PropertyRef Name="customerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDILI">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+          <End Role="invoiceLineItems" Type="Self.invoiceLineItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="invoiceLineItems">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDQS">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+          <End Role="quantityStatus" Type="Self.quantityStatu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="quantityStatus">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDSS">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+          <End Role="safetyStock" Type="Self.safetyStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="safetyStock">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDVID">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="inventory" Type="Self.inventory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="vendorID" />
+            </Principal>
+            <Dependent Role="inventory">
+              <PropertyRef Name="vendorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_inventoryIDVS">
+          <End Role="inventory" Type="Self.inventory" Multiplicity="1" />
+          <End Role="vendorProduct" Type="Self.vendorProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="inventory">
+              <PropertyRef Name="inventoryID" />
+            </Principal>
+            <Dependent Role="vendorProduct">
+              <PropertyRef Name="inventoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_invoiceID">
+          <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
+          <End Role="invoiceLineItems" Type="Self.invoiceLineItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="invoice">
+              <PropertyRef Name="invoiceID" />
+            </Principal>
+            <Dependent Role="invoiceLineItems">
+              <PropertyRef Name="invoiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_POid">
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="1" />
+          <End Role="PurchaseOrderLine" Type="Self.PurchaseOrderLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="POid" />
+            </Principal>
+            <Dependent Role="PurchaseOrderLine">
+              <PropertyRef Name="POid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vendorID">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="vendorID" />
+            </Principal>
+            <Dependent Role="PurchaseOrder">
+              <PropertyRef Name="VendorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="manufacturerEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BoMs" EntityType="Self.BoM" />
+          <EntitySet Name="CreditReferences" EntityType="Self.CreditReference" />
+          <EntitySet Name="customers" EntityType="Self.customer" />
+          <EntitySet Name="inventories" EntityType="Self.inventory" />
+          <EntitySet Name="invoices" EntityType="Self.invoice" />
+          <EntitySet Name="invoiceLineItems" EntityType="Self.invoiceLineItem" />
+          <EntitySet Name="PurchaseOrders" EntityType="Self.PurchaseOrder" />
+          <EntitySet Name="PurchaseOrderLines" EntityType="Self.PurchaseOrderLine" />
+          <EntitySet Name="quantityStatus" EntityType="Self.quantityStatu" />
+          <EntitySet Name="Resources" EntityType="Self.Resource" />
+          <EntitySet Name="safetyStocks" EntityType="Self.safetyStock" />
+          <EntitySet Name="Vendors" EntityType="Self.Vendor" />
+          <EntitySet Name="vendorProducts" EntityType="Self.vendorProduct" />
+          <EntitySet Name="HILODrivers" EntityType="Self.HILODriver" />
+          <EntitySet Name="vInvoiceLineItemsAndInventories" EntityType="Self.vInvoiceLineItemsAndInventory" />
+          <AssociationSet Name="FK_customerIDCR" Association="Self.FK_customerIDCR">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="CreditReference" EntitySet="CreditReferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customerIDI" Association="Self.FK_customerIDI">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="invoice" EntitySet="invoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDILI" Association="Self.FK_inventoryIDILI">
+            <End Role="inventory" EntitySet="inventories" />
+            <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDQS" Association="Self.FK_inventoryIDQS">
+            <End Role="inventory" EntitySet="inventories" />
+            <End Role="quantityStatus" EntitySet="quantityStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDSS" Association="Self.FK_inventoryIDSS">
+            <End Role="inventory" EntitySet="inventories" />
+            <End Role="safetyStock" EntitySet="safetyStocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDVID" Association="Self.FK_inventoryIDVID">
+            <End Role="Vendor" EntitySet="Vendors" />
+            <End Role="inventory" EntitySet="inventories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_inventoryIDVS" Association="Self.FK_inventoryIDVS">
+            <End Role="inventory" EntitySet="inventories" />
+            <End Role="vendorProduct" EntitySet="vendorProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_invoiceID" Association="Self.FK_invoiceID">
+            <End Role="invoice" EntitySet="invoices" />
+            <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_POid" Association="Self.FK_POid">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+            <End Role="PurchaseOrderLine" EntitySet="PurchaseOrderLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vendorID" Association="Self.FK_vendorID">
+            <End Role="Vendor" EntitySet="Vendors" />
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <FunctionImport Name="updtOrderTotal">
+            <Parameter Name="invID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="updtQty">
+            <Parameter Name="invID" Mode="In" Type="Int32" />
+            <Parameter Name="invSeq" Mode="In" Type="Int32" />
+            <Parameter Name="qty" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="manufacturerModelStoreContainer" CdmEntityContainer="manufacturerEntities1">
+          <EntitySetMapping Name="BoMs">
+            <EntityTypeMapping TypeName="manufacturerModel.BoM">
+              <MappingFragment StoreEntitySet="BoM">
+                <ScalarProperty Name="BillOfMaterialID" ColumnName="BillOfMaterialID" />
+                <ScalarProperty Name="ProductAssemblyID" ColumnName="ProductAssemblyID" />
+                <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
+                <ScalarProperty Name="UnitMeasureCode" ColumnName="UnitMeasureCode" />
+                <ScalarProperty Name="BoMLevel" ColumnName="BoMLevel" />
+                <ScalarProperty Name="PerAssemblyQuantity" ColumnName="PerAssemblyQuantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreditReferences">
+            <EntityTypeMapping TypeName="manufacturerModel.CreditReference">
+              <MappingFragment StoreEntitySet="CreditReference">
+                <ScalarProperty Name="CreditReferenceID" ColumnName="CreditReferenceID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="CurrentBalance" ColumnName="CurrentBalance" />
+                <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customers">
+            <EntityTypeMapping TypeName="manufacturerModel.customer">
+              <MappingFragment StoreEntitySet="customer">
+                <ScalarProperty Name="customerID" ColumnName="customerID" />
+                <ScalarProperty Name="customerName" ColumnName="customerName" />
+                <ScalarProperty Name="addressBilling" ColumnName="addressBilling" />
+                <ScalarProperty Name="shippingStreet" ColumnName="shippingStreet" />
+                <ScalarProperty Name="shippingCity" ColumnName="shippingCity" />
+                <ScalarProperty Name="shippingState" ColumnName="shippingState" />
+                <ScalarProperty Name="creditCard" ColumnName="creditCard" />
+                <ScalarProperty Name="creditRefID" ColumnName="creditRefID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="inventories">
+            <EntityTypeMapping TypeName="manufacturerModel.inventory">
+              <MappingFragment StoreEntitySet="inventory">
+                <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+                <ScalarProperty Name="vendorID" ColumnName="vendorID" />
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="itemDesc" ColumnName="itemDesc" />
+                <ScalarProperty Name="itemUnit" ColumnName="itemUnit" />
+                <ScalarProperty Name="itemType" ColumnName="itemType" />
+                <ScalarProperty Name="itemFCost" ColumnName="itemFCost" />
+                <ScalarProperty Name="itemVCost" ColumnName="itemVCost" />
+                <ScalarProperty Name="bestPrice" ColumnName="bestPrice" />
+                <ScalarProperty Name="manufacturer" ColumnName="manufacturer" />
+                <ScalarProperty Name="imageFile" ColumnName="imageFile" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoices">
+            <EntityTypeMapping TypeName="manufacturerModel.invoice">
+              <MappingFragment StoreEntitySet="invoice">
+                <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+                <ScalarProperty Name="customerID" ColumnName="customerID" />
+                <ScalarProperty Name="shipmentType" ColumnName="shipmentType" />
+                <ScalarProperty Name="orderTotalPrice" ColumnName="orderTotalPrice" />
+                <ScalarProperty Name="estimatedShippingDate" ColumnName="estimatedShippingDate" />
+                <ScalarProperty Name="invoiceDateTime" ColumnName="invoiceDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoiceLineItems">
+            <EntityTypeMapping TypeName="manufacturerModel.invoiceLineItem">
+              <MappingFragment StoreEntitySet="invoiceLineItems">
+                <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+                <ScalarProperty Name="invoiceSequence" ColumnName="invoiceSequence" />
+                <ScalarProperty Name="invoiceLineItemPrice" ColumnName="invoiceLineItemPrice" />
+                <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+                <ScalarProperty Name="quantityOfItem" ColumnName="quantityOfItem" />
+                <ScalarProperty Name="orderStatus" ColumnName="orderStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrders">
+            <EntityTypeMapping TypeName="manufacturerModel.PurchaseOrder">
+              <MappingFragment StoreEntitySet="PurchaseOrder">
+                <ScalarProperty Name="POid" ColumnName="POid" />
+                <ScalarProperty Name="VendorID" ColumnName="VendorID" />
+                <ScalarProperty Name="Quantiy" ColumnName="Quantiy" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="CostPerUnit" ColumnName="CostPerUnit" />
+                <ScalarProperty Name="FulfilledDate" ColumnName="FulfilledDate" />
+                <ScalarProperty Name="BilltoAddress" ColumnName="BilltoAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrderLines">
+            <EntityTypeMapping TypeName="manufacturerModel.PurchaseOrderLine">
+              <MappingFragment StoreEntitySet="PurchaseOrderLine">
+                <ScalarProperty Name="POid" ColumnName="POid" />
+                <ScalarProperty Name="PurchaseOrderLineID" ColumnName="PurchaseOrderLineID" />
+                <ScalarProperty Name="PurchaseOrderLineItemPrice" ColumnName="PurchaseOrderLineItemPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="quantityStatus">
+            <EntityTypeMapping TypeName="manufacturerModel.quantityStatu">
+              <MappingFragment StoreEntitySet="quantityStatus">
+                <ScalarProperty Name="statusID" ColumnName="statusID" />
+                <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+                <ScalarProperty Name="onHand" ColumnName="onHand" />
+                <ScalarProperty Name="onOrder" ColumnName="onOrder" />
+                <ScalarProperty Name="inTransit" ColumnName="inTransit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Resources">
+            <EntityTypeMapping TypeName="manufacturerModel.Resource">
+              <MappingFragment StoreEntitySet="Resources">
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="ResourceName" ColumnName="ResourceName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="safetyStocks">
+            <EntityTypeMapping TypeName="manufacturerModel.safetyStock">
+              <MappingFragment StoreEntitySet="safetyStock">
+                <ScalarProperty Name="safetyStockID" ColumnName="safetyStockID" />
+                <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+                <ScalarProperty Name="safetyStock1" ColumnName="safetyStock" />
+                <ScalarProperty Name="maxLevel" ColumnName="maxLevel" />
+                <ScalarProperty Name="orderLeadTime" ColumnName="orderLeadTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vendors">
+            <EntityTypeMapping TypeName="manufacturerModel.Vendor">
+              <MappingFragment StoreEntitySet="Vendor">
+                <ScalarProperty Name="vendorID" ColumnName="vendorID" />
+                <ScalarProperty Name="vendorName" ColumnName="vendorName" />
+                <ScalarProperty Name="contact" ColumnName="contact" />
+                <ScalarProperty Name="contactNumber" ColumnName="contactNumber" />
+                <ScalarProperty Name="addressStreet" ColumnName="addressStreet" />
+                <ScalarProperty Name="addressCity" ColumnName="addressCity" />
+                <ScalarProperty Name="addressState" ColumnName="addressState" />
+                <ScalarProperty Name="letterRating" ColumnName="letterRating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vendorProducts">
+            <EntityTypeMapping TypeName="manufacturerModel.vendorProduct">
+              <MappingFragment StoreEntitySet="vendorProduct">
+                <ScalarProperty Name="vendorID" ColumnName="vendorID" />
+                <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+                <ScalarProperty Name="productName" ColumnName="productName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HILODrivers">
+            <EntityTypeMapping TypeName="manufacturerModel.HILODriver">
+              <MappingFragment StoreEntitySet="HILODriver">
+                <ScalarProperty Name="DriverID" ColumnName="DriverID" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vInvoiceLineItemsAndInventories">
+            <EntityTypeMapping TypeName="manufacturerModel.vInvoiceLineItemsAndInventory">
+              <MappingFragment StoreEntitySet="vInvoiceLineItemsAndInventory">
+                <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+                <ScalarProperty Name="invoiceSequence" ColumnName="invoiceSequence" />
+                <ScalarProperty Name="inventoryID" ColumnName="inventoryID" />
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="quantityOfItem" ColumnName="quantityOfItem" />
+                <ScalarProperty Name="invoiceLineItemPrice" ColumnName="invoiceLineItemPrice" />
+                <ScalarProperty Name="orderStatus" ColumnName="orderStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="updtOrderTotal" FunctionName="manufacturerModel.Store.updtOrderTotal" />
+          <FunctionImportMapping FunctionImportName="updtQty" FunctionName="manufacturerModel.Store.updtQty" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

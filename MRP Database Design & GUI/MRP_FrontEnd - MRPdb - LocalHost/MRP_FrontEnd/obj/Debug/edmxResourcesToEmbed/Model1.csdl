@@ -1,0 +1,371 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="manufacturerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="BoM">
+    <Key>
+      <PropertyRef Name="BillOfMaterialID" />
+    </Key>
+    <Property Name="BillOfMaterialID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductAssemblyID" Type="Int32" />
+    <Property Name="ComponentID" Type="Int32" />
+    <Property Name="UnitMeasureCode" Type="Int32" />
+    <Property Name="BoMLevel" Type="Int32" />
+    <Property Name="PerAssemblyQuantity" Type="Int32" />
+  </EntityType>
+  <EntityType Name="CreditReference">
+    <Key>
+      <PropertyRef Name="CreditReferenceID" />
+    </Key>
+    <Property Name="CreditReferenceID" Type="Int32" Nullable="false" />
+    <Property Name="CustomerID" Type="Int32" />
+    <Property Name="AccountNumber" Type="Int32" />
+    <Property Name="CurrentBalance" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="CreditLimit" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="customer" Relationship="Self.FK_customerIDCR" FromRole="CreditReference" ToRole="customer" />
+  </EntityType>
+  <EntityType Name="customer">
+    <Key>
+      <PropertyRef Name="customerID" />
+    </Key>
+    <Property Name="customerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="customerName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="addressBilling" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="shippingStreet" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="shippingCity" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="shippingState" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="creditCard" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="creditRefID" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="CreditReferences" Relationship="Self.FK_customerIDCR" FromRole="customer" ToRole="CreditReference" />
+    <NavigationProperty Name="invoices" Relationship="Self.FK_customerIDI" FromRole="customer" ToRole="invoice" />
+  </EntityType>
+  <EntityType Name="inventory">
+    <Key>
+      <PropertyRef Name="inventoryID" />
+    </Key>
+    <Property Name="inventoryID" Type="Int32" Nullable="false" />
+    <Property Name="vendorID" Type="Int32" />
+    <Property Name="itemName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="itemDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="itemUnit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="itemType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Name="itemFCost" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="itemVCost" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="bestPrice" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="manufacturer" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="imageFile" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="invoiceLineItems" Relationship="Self.FK_inventoryIDILI" FromRole="inventory" ToRole="invoiceLineItems" />
+    <NavigationProperty Name="quantityStatus" Relationship="Self.FK_inventoryIDQS" FromRole="inventory" ToRole="quantityStatus" />
+    <NavigationProperty Name="safetyStocks" Relationship="Self.FK_inventoryIDSS" FromRole="inventory" ToRole="safetyStock" />
+    <NavigationProperty Name="Vendor" Relationship="Self.FK_inventoryIDVID" FromRole="inventory" ToRole="Vendor" />
+    <NavigationProperty Name="vendorProducts" Relationship="Self.FK_inventoryIDVS" FromRole="inventory" ToRole="vendorProduct" />
+  </EntityType>
+  <EntityType Name="invoice">
+    <Key>
+      <PropertyRef Name="invoiceID" />
+    </Key>
+    <Property Name="invoiceID" Type="Int32" Nullable="false" />
+    <Property Name="customerID" Type="Int32" />
+    <Property Name="shipmentType" Type="Int32" />
+    <Property Name="orderTotalPrice" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="estimatedShippingDate" Type="DateTime" Precision="0" />
+    <Property Name="invoiceDateTime" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="customer" Relationship="Self.FK_customerIDI" FromRole="invoice" ToRole="customer" />
+    <NavigationProperty Name="invoiceLineItems" Relationship="Self.FK_invoiceID" FromRole="invoice" ToRole="invoiceLineItems" />
+  </EntityType>
+  <EntityType Name="invoiceLineItem">
+    <Key>
+      <PropertyRef Name="invoiceID" />
+      <PropertyRef Name="invoiceSequence" />
+    </Key>
+    <Property Name="invoiceID" Type="Int32" Nullable="false" />
+    <Property Name="invoiceSequence" Type="Int32" Nullable="false" />
+    <Property Name="invoiceLineItemPrice" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="inventoryID" Type="Int32" />
+    <Property Name="quantityOfItem" Type="Int32" />
+    <Property Name="orderStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDILI" FromRole="invoiceLineItems" ToRole="inventory" />
+    <NavigationProperty Name="invoice" Relationship="Self.FK_invoiceID" FromRole="invoiceLineItems" ToRole="invoice" />
+  </EntityType>
+  <EntityType Name="PurchaseOrder">
+    <Key>
+      <PropertyRef Name="POid" />
+    </Key>
+    <Property Name="POid" Type="Int32" Nullable="false" />
+    <Property Name="VendorID" Type="Int32" />
+    <Property Name="Quantiy" Type="Int32" />
+    <Property Name="Unit" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
+    <Property Name="CostPerUnit" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="FulfilledDate" Type="DateTime" Precision="0" />
+    <Property Name="BilltoAddress" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="PurchaseOrderLines" Relationship="Self.FK_POid" FromRole="PurchaseOrder" ToRole="PurchaseOrderLine" />
+    <NavigationProperty Name="Vendor" Relationship="Self.FK_vendorID" FromRole="PurchaseOrder" ToRole="Vendor" />
+  </EntityType>
+  <EntityType Name="PurchaseOrderLine">
+    <Key>
+      <PropertyRef Name="POid" />
+      <PropertyRef Name="PurchaseOrderLineID" />
+    </Key>
+    <Property Name="POid" Type="Int32" Nullable="false" />
+    <Property Name="PurchaseOrderLineID" Type="Int32" Nullable="false" />
+    <Property Name="PurchaseOrderLineItemPrice" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="Self.FK_POid" FromRole="PurchaseOrderLine" ToRole="PurchaseOrder" />
+  </EntityType>
+  <EntityType Name="quantityStatu">
+    <Key>
+      <PropertyRef Name="statusID" />
+    </Key>
+    <Property Name="statusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="inventoryID" Type="Int32" />
+    <Property Name="onHand" Type="Int32" />
+    <Property Name="onOrder" Type="Int32" />
+    <Property Name="inTransit" Type="Int32" />
+    <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDQS" FromRole="quantityStatus" ToRole="inventory" />
+  </EntityType>
+  <EntityType Name="Resource">
+    <Key>
+      <PropertyRef Name="ResourceID" />
+    </Key>
+    <Property Name="ResourceID" Type="Int32" Nullable="false" />
+    <Property Name="ResourceName" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="safetyStock">
+    <Key>
+      <PropertyRef Name="safetyStockID" />
+    </Key>
+    <Property Name="safetyStockID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="inventoryID" Type="Int32" />
+    <Property Name="safetyStock1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="maxLevel" Type="Int32" />
+    <Property Name="orderLeadTime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDSS" FromRole="safetyStock" ToRole="inventory" />
+  </EntityType>
+  <EntityType Name="Vendor">
+    <Key>
+      <PropertyRef Name="vendorID" />
+    </Key>
+    <Property Name="vendorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="vendorName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="contact" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="contactNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="addressStreet" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="addressCity" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="addressState" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="letterRating" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="inventories" Relationship="Self.FK_inventoryIDVID" FromRole="Vendor" ToRole="inventory" />
+    <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK_vendorID" FromRole="Vendor" ToRole="PurchaseOrder" />
+  </EntityType>
+  <EntityType Name="vendorProduct">
+    <Key>
+      <PropertyRef Name="vendorID" />
+      <PropertyRef Name="inventoryID" />
+    </Key>
+    <Property Name="vendorID" Type="Int32" Nullable="false" />
+    <Property Name="inventoryID" Type="Int32" Nullable="false" />
+    <Property Name="productName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="inventory" Relationship="Self.FK_inventoryIDVS" FromRole="vendorProduct" ToRole="inventory" />
+  </EntityType>
+  <EntityType Name="HILODriver">
+    <Key>
+      <PropertyRef Name="DriverName" />
+    </Key>
+    <Property Name="DriverID" Type="Int32" />
+    <Property Name="DriverName" Type="String" MaxLength="30" FixedLength="true" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vInvoiceLineItemsAndInventory">
+    <Key>
+      <PropertyRef Name="invoiceID" />
+      <PropertyRef Name="invoiceSequence" />
+    </Key>
+    <Property Name="invoiceID" Type="Int32" Nullable="false" />
+    <Property Name="invoiceSequence" Type="Int32" Nullable="false" />
+    <Property Name="inventoryID" Type="Int32" />
+    <Property Name="itemName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="quantityOfItem" Type="Int32" />
+    <Property Name="invoiceLineItemPrice" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="orderStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK_customerIDCR">
+    <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+    <End Role="CreditReference" Type="Self.CreditReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="CreditReference">
+        <PropertyRef Name="CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_customerIDI">
+    <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+    <End Role="invoice" Type="Self.invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="invoice">
+        <PropertyRef Name="customerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDILI">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+    <End Role="invoiceLineItems" Type="Self.invoiceLineItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="invoiceLineItems">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDQS">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+    <End Role="quantityStatus" Type="Self.quantityStatu" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="quantityStatus">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDSS">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="0..1" />
+    <End Role="safetyStock" Type="Self.safetyStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="safetyStock">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDVID">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+    <End Role="inventory" Type="Self.inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="vendorID" />
+      </Principal>
+      <Dependent Role="inventory">
+        <PropertyRef Name="vendorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_inventoryIDVS">
+    <End Role="inventory" Type="Self.inventory" Multiplicity="1" />
+    <End Role="vendorProduct" Type="Self.vendorProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="inventory">
+        <PropertyRef Name="inventoryID" />
+      </Principal>
+      <Dependent Role="vendorProduct">
+        <PropertyRef Name="inventoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_invoiceID">
+    <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
+    <End Role="invoiceLineItems" Type="Self.invoiceLineItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="invoice">
+        <PropertyRef Name="invoiceID" />
+      </Principal>
+      <Dependent Role="invoiceLineItems">
+        <PropertyRef Name="invoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_POid">
+    <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="1" />
+    <End Role="PurchaseOrderLine" Type="Self.PurchaseOrderLine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrder">
+        <PropertyRef Name="POid" />
+      </Principal>
+      <Dependent Role="PurchaseOrderLine">
+        <PropertyRef Name="POid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_vendorID">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+    <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="vendorID" />
+      </Principal>
+      <Dependent Role="PurchaseOrder">
+        <PropertyRef Name="VendorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="manufacturerEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="BoMs" EntityType="Self.BoM" />
+    <EntitySet Name="CreditReferences" EntityType="Self.CreditReference" />
+    <EntitySet Name="customers" EntityType="Self.customer" />
+    <EntitySet Name="inventories" EntityType="Self.inventory" />
+    <EntitySet Name="invoices" EntityType="Self.invoice" />
+    <EntitySet Name="invoiceLineItems" EntityType="Self.invoiceLineItem" />
+    <EntitySet Name="PurchaseOrders" EntityType="Self.PurchaseOrder" />
+    <EntitySet Name="PurchaseOrderLines" EntityType="Self.PurchaseOrderLine" />
+    <EntitySet Name="quantityStatus" EntityType="Self.quantityStatu" />
+    <EntitySet Name="Resources" EntityType="Self.Resource" />
+    <EntitySet Name="safetyStocks" EntityType="Self.safetyStock" />
+    <EntitySet Name="Vendors" EntityType="Self.Vendor" />
+    <EntitySet Name="vendorProducts" EntityType="Self.vendorProduct" />
+    <EntitySet Name="HILODrivers" EntityType="Self.HILODriver" />
+    <EntitySet Name="vInvoiceLineItemsAndInventories" EntityType="Self.vInvoiceLineItemsAndInventory" />
+    <AssociationSet Name="FK_customerIDCR" Association="Self.FK_customerIDCR">
+      <End Role="customer" EntitySet="customers" />
+      <End Role="CreditReference" EntitySet="CreditReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_customerIDI" Association="Self.FK_customerIDI">
+      <End Role="customer" EntitySet="customers" />
+      <End Role="invoice" EntitySet="invoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDILI" Association="Self.FK_inventoryIDILI">
+      <End Role="inventory" EntitySet="inventories" />
+      <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDQS" Association="Self.FK_inventoryIDQS">
+      <End Role="inventory" EntitySet="inventories" />
+      <End Role="quantityStatus" EntitySet="quantityStatus" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDSS" Association="Self.FK_inventoryIDSS">
+      <End Role="inventory" EntitySet="inventories" />
+      <End Role="safetyStock" EntitySet="safetyStocks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDVID" Association="Self.FK_inventoryIDVID">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="inventory" EntitySet="inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_inventoryIDVS" Association="Self.FK_inventoryIDVS">
+      <End Role="inventory" EntitySet="inventories" />
+      <End Role="vendorProduct" EntitySet="vendorProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_invoiceID" Association="Self.FK_invoiceID">
+      <End Role="invoice" EntitySet="invoices" />
+      <End Role="invoiceLineItems" EntitySet="invoiceLineItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_POid" Association="Self.FK_POid">
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+      <End Role="PurchaseOrderLine" EntitySet="PurchaseOrderLines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_vendorID" Association="Self.FK_vendorID">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+    </AssociationSet>
+    <FunctionImport Name="updtOrderTotal">
+      <Parameter Name="invID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="updtQty">
+      <Parameter Name="invID" Mode="In" Type="Int32" />
+      <Parameter Name="invSeq" Mode="In" Type="Int32" />
+      <Parameter Name="qty" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>

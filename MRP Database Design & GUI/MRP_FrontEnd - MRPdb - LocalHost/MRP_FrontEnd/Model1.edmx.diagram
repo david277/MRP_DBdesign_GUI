@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c8d6fb34bf5745d4b177db44c895d53b" Name="Diagram1">
+        <EntityTypeShape EntityType="manufacturerModel.BoM" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.CreditReference" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.customer" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.inventory" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.invoice" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.invoiceLineItem" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.PurchaseOrder" Width="1.5" PointX="3" PointY="15.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.PurchaseOrderLine" Width="1.5" PointX="5.25" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.quantityStatu" Width="1.5" PointX="5.25" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.Resource" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.safetyStock" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.Vendor" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.vendorProduct" Width="1.5" PointX="5.25" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.HILODriver" Width="1.5" PointX="7.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="manufacturerModel.vInvoiceLineItemsAndInventory" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="manufacturerModel.FK_customerIDCR" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_customerIDI" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_inventoryIDILI" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_inventoryIDQS" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_inventoryIDSS" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_inventoryIDVID" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_inventoryIDVS" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_invoiceID" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_POid" ManuallyRouted="false" />
+        <AssociationConnector Association="manufacturerModel.FK_vendorID" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
